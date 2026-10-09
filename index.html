@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<style>html{color-scheme:light dark}body{margin:0}[hidden]{display:none!important}</style>
+<title>Шпаргалка Дня науки</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: чертёжные листы. Узкая колонка, каждый раздел отдельным листом,
+   диаграммы рисованы как чертежи: холодная часть двигателя синяя, горячая оранжевая. */
+:root{
+  --bg:#EDF1F5; --surface:#F8FAFC; --ink:#13202D; --ink-2:#4B5B6B; --rule:#C8D2DC;
+  --cold:#1D4ED8; --cold-soft:#DCE6FB; --hot:#C2410C; --hot-soft:#FBE3D6; --shaft:#0F766E;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C141D; --surface:#142130; --ink:#E7EEF6; --ink-2:#9AAEC2; --rule:#2A3B4E;
+    --cold:#7DA2FF; --cold-soft:#1B2D55; --hot:#FF9A62; --hot-soft:#4A2615; --shaft:#4FD1C1;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C141D; --surface:#142130; --ink:#E7EEF6; --ink-2:#9AAEC2; --rule:#2A3B4E;
+  --cold:#7DA2FF; --cold-soft:#1B2D55; --hot:#FF9A62; --hot-soft:#4A2615; --shaft:#4FD1C1;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--body);padding-inline:16px;padding-block:0}
+.wrap{max-width:840px;margin-inline:auto}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;line-height:1.15;margin:0}
+h1{font-size:clamp(2rem,6vw,3rem);font-weight:700;letter-spacing:-.01em}
+h2{font-size:clamp(1.6rem,4.5vw,2.1rem);font-weight:700}
+h3{font-size:1.2rem;font-weight:600}
+p{margin:0 0 .8em}
+a{color:var(--cold)}
+a:focus-visible,summary:focus-visible,button:focus-visible{outline:3px solid var(--cold);outline-offset:2px}
+.mono{font-family:var(--mono)}
+.muted{color:var(--ink-2)}
+.small{font-size:.875rem}
+
+/* header */
+header{padding-block:28px 20px;display:grid;gap:12px}
+.kicker{font:500 .78rem/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.lede{font-size:1.1rem;max-width:62ch;color:var(--ink)}
+
+/* nav */
+nav.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-block:1px solid var(--rule);margin-inline:-16px;padding-inline:16px;display:flex;gap:6px;overflow-x:auto;padding-block:8px;scrollbar-width:thin}
+nav.tabs a{flex:none;font:500 .82rem/1 var(--mono);text-decoration:none;color:var(--ink);padding:9px 11px;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+nav.tabs a:hover{border-color:var(--cold);color:var(--cold)}
+
+/* sections */
+section{padding-block:40px 8px;scroll-margin-top:calc(56px + env(safe-area-inset-top,0px));display:grid;gap:18px}
+section+section{border-top:1px solid var(--rule);margin-top:32px}
+.head{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.stamp{font:500 .72rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;border:1.5px solid var(--ink-2);color:var(--ink-2);padding:6px 8px;border-radius:3px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:16px 18px}
+.say{border-left:4px solid var(--cold);background:var(--cold-soft);padding:12px 16px;border-radius:0 6px 6px 0}
+.say b{display:block;font:500 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--cold);margin-bottom:6px}
+.warn{border-left:4px solid var(--hot);background:var(--hot-soft);padding:12px 16px;border-radius:0 6px 6px 0}
+.warn b{display:block;font:500 .72rem/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--hot);margin-bottom:6px}
+ul.tight{margin:0;padding-left:1.2em;display:grid;gap:6px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
+.grid2>*{min-width:0}
+
+/* tables */
+.scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.92rem}
+th,td{text-align:left;vertical-align:top;padding:10px 12px;border-bottom:1px solid var(--rule)}
+th{font:500 .74rem/1.2 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);background:var(--bg)}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:600;white-space:nowrap}
+td.num,th.num{font-variant-numeric:tabular-nums}
+
+/* figures */
+.fig{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:700px){.fig{grid-template-columns:minmax(0,1fr)}}
+.svgbox{background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:10px;max-width:420px;width:100%}
+.svgbox svg{display:block;width:100%;height:auto}
+svg text{font-family:var(--mono);fill:var(--ink)}
+svg .tl{font-size:15px;font-weight:600;text-anchor:middle;paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+svg .ts{font-size:12px}
+svg .tm{font-size:12px;fill:var(--ink-2)}
+.c-cold{fill:var(--cold-soft);stroke:var(--cold);stroke-width:1.6}
+.c-hot{fill:var(--hot-soft);stroke:var(--hot);stroke-width:1.6}
+.c-line{fill:none;stroke:var(--ink-2);stroke-width:2}
+.mk-ink{fill:var(--ink-2)} .mk-cold{fill:var(--cold)} .mk-hot{fill:var(--hot)}
+.legend{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.legend li{display:grid;grid-template-columns:4.2em 1fr;gap:10px;align-items:baseline;padding-bottom:10px;border-bottom:1px solid var(--rule)}
+.legend li:last-child{border-bottom:0}
+.legend b{font:600 1rem/1.2 var(--mono);color:var(--cold)}
+.legend .h b{color:var(--hot)}
+.path{font:500 .95rem/1.5 var(--mono);background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;overflow-wrap:anywhere}
+.path .hot{color:var(--hot)} .path .cold{color:var(--cold)}
+
+/* generations */
+.gens{display:grid;gap:12px}
+.gen{display:grid;grid-template-columns:5.5rem minmax(0,1fr);gap:14px;background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:14px 16px}
+@media (max-width:520px){.gen{grid-template-columns:1fr}}
+.gen .n{font:700 2.4rem/1 var(--display);color:var(--cold)}
+.gen .n small{display:block;font:500 .7rem/1.3 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin-top:4px}
+.gen.next{border-style:dashed}
+.gen.next .n{color:var(--hot)}
+.bars{display:grid;gap:8px}
+.bar{display:grid;grid-template-columns:5.5rem minmax(0,1fr) 4.5rem;gap:10px;align-items:center;font:500 .85rem/1 var(--mono)}
+.bar i{display:block;height:14px;border-radius:2px;background:linear-gradient(90deg,var(--cold),var(--hot));width:var(--w)}
+.bar span:last-child{text-align:right;font-variant-numeric:tabular-nums}
+
+/* departments + employers */
+.dept{display:grid;gap:8px}
+.dept .no{font:700 2rem/1 var(--display);color:var(--cold)}
+.dept .code{font:500 .72rem/1.3 var(--mono);color:var(--ink-2);letter-spacing:.04em}
+.dept .who{font-size:.9rem;color:var(--ink-2)}
+.dept .who b{color:var(--ink)}
+
+/* Q&A */
+details.qa{background:var(--surface);border:1px solid var(--rule);border-radius:6px}
+details.qa+details.qa{margin-top:8px}
+details.qa summary{cursor:pointer;list-style:none;padding:13px 16px;font-weight:600;display:flex;gap:12px;align-items:baseline}
+details.qa summary::-webkit-details-marker{display:none}
+details.qa summary::before{content:"+";font:500 1.1rem/1 var(--mono);color:var(--cold);flex:none;width:1ch}
+details.qa[open] summary::before{content:"−"}
+details.qa .ans{padding:0 16px 14px 44px}
+details.qa .ans p:last-child{margin-bottom:0}
+
+/* trainer */
+.drill{display:grid;gap:14px}
+.drill .q{font:600 1.25rem/1.35 var(--display);min-height:3.2em}
+.drill .a{border-top:1px solid var(--rule);padding-top:12px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+button{font:600 .95rem/1 var(--body);padding:12px 18px;border-radius:5px;border:1.5px solid var(--cold);background:var(--cold);color:var(--bg);cursor:pointer}
+button.ghost{background:transparent;color:var(--cold)}
+footer{padding-block:36px 48px;color:var(--ink-2);font-size:.875rem;border-top:1px solid var(--rule);margin-top:40px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="kicker">День науки · Институт №2 МАИ</div>
+  <h1>Шпаргалка Дня науки</h1>
+  <p class="lede">Как устроены авиационные и ракетные двигатели, чем занимаются кафедры Института №2 МАИ и где потом работают выпускники. Со схемами, ответами на частые вопросы и тестом для самопроверки в конце.</p>
+  <p class="small muted">Кафедры и тренды описаны по материалам института. Остальное из общих знаний, цифры округлены.</p>
+</header>
+
+<nav class="tabs" aria-label="Разделы">
+  <a href="#start">Старт</a><a href="#gtd">Агрегаты</a><a href="#cycle">Принцип ГТД</a><a href="#zhrd">ЖРД</a><a href="#gen">Поколения</a><a href="#dept">Кафедры</a><a href="#work">Работодатели</a><a href="#trend">Тренды</a><a href="#qa">Вопросы</a><a href="#drill">Проверь себя</a>
+</nav>
+
+<!-- ============ СТАРТ ============ -->
+<section id="start">
+  <div class="head"><h2>Старт: 60 секунд</h2></div>
+  <div class="say"><b>Коротко об институте</b>
+    Институт №2 готовит инженеров по двигателям: самолётным, ракетным и электроракетным для спутников. Здесь учат двигатель рассчитать, сконструировать, изготовить, испытать и сертифицировать. Выпускники нужны не только в двигателестроении, а в инженерии вообще, потому что подготовка фундаментальная. Карьера возможна вплоть до руководящих должностей на предприятиях отрасли.
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>Какую кафедру выбрать</h3>
+      <ul class="tight small" style="margin-top:10px">
+        <li>Считать самолётные двигатели: <b>201</b></li>
+        <li>Ракеты, жидкостные и твердотопливные: <b>202</b></li>
+        <li>Конструировать и считать прочность: <b>203</b></li>
+        <li>Тепло и 3D-расчёты: <b>204</b></li>
+        <li>Делать и ремонтировать: <b>205</b> (в том числе с Аэрофлот Техникс)</li>
+        <li>Испытывать и сертифицировать: <b>207</b> (сеть МАИ-ОДК)</li>
+        <li>Космос на электричестве: <b>208</b></li>
+      </ul>
+    </div>
+    <div class="warn"><b>Чего здесь нет</b>
+      Сроки обучения, проходные баллы, экзамены и условия поступления.
+      <p class="small" style="margin-top:8px;margin-bottom:0">Их смотрите на сайте МАИ и уточняйте в приёмной комиссии.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ПУНКТ 1: АГРЕГАТЫ ГТД ============ -->
+<section id="gtd">
+  <div class="head"><h2>Основные агрегаты ГТД</h2></div>
+  <div class="path" aria-label="Путь воздуха"><span class="cold">ВУ → КНД → КВД</span> → <span class="hot">КС → ТВД → ТНД → (ФК) → РС</span></div>
+  <div class="fig">
+    <div class="svgbox">
+      <svg viewBox="0 0 380 600" role="img" aria-label="Схема двухвального турбореактивного двигателя с форсажной камерой: входное устройство, КНД, КВД, камера сгорания, ТВД, ТНД, форсажная камера, реактивное сопло. Второй контур обходит ядро.">
+        <defs>
+          <marker id="a-ink" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="mk-ink"/></marker>
+          <marker id="a-cold" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="mk-cold"/></marker>
+          <marker id="a-hot" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0L10,5L0,10z" class="mk-hot"/></marker>
+        </defs>
+        <path d="M130,4 V26" class="c-line" marker-end="url(#a-ink)"/>
+        <polygon points="30,30 230,30 202,76 58,76" class="c-cold"/>
+        <polygon points="58,80 202,80 190,150 70,150" class="c-cold"/>
+        <polygon points="74,154 186,154 170,214 90,214" class="c-cold"/>
+        <rect x="80" y="220" width="100" height="70" rx="10" class="c-hot"/>
+        <polygon points="84,296 176,296 186,336 74,336" class="c-hot"/>
+        <polygon points="74,340 186,340 198,390 62,390" class="c-hot"/>
+        <rect x="60" y="396" width="140" height="80" rx="6" class="c-hot" stroke-dasharray="6 4"/>
+        <polygon points="60,482 200,482 165,515 190,560 70,560 95,515" class="c-hot"/>
+        <!-- bypass -->
+        <path d="M196,112 H262 V436 H206" fill="none" stroke="var(--cold)" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#a-cold)"/>
+        <!-- shafts -->
+        <line x1="130" y1="100" x2="130" y2="385" stroke="var(--shaft)" stroke-width="3.5"/>
+        <line x1="119" y1="160" x2="119" y2="332" stroke="var(--ink)" stroke-width="2"/>
+        <line x1="141" y1="160" x2="141" y2="332" stroke="var(--ink)" stroke-width="2"/>
+        <!-- labels in blocks -->
+        <text x="130" y="60" class="tl">ВУ</text>
+        <text x="130" y="122" class="tl">КНД</text>
+        <text x="130" y="190" class="tl">КВД</text>
+        <text x="130" y="260" class="tl">КС</text>
+        <text x="130" y="322" class="tl">ТВД</text>
+        <text x="130" y="370" class="tl">ТНД</text>
+        <text x="130" y="442" class="tl">ФК</text>
+        <text x="130" y="548" class="tl">РС</text>
+        <!-- exhaust -->
+        <path d="M130,564 V592" class="c-line" stroke="var(--hot)" stroke-width="3" marker-end="url(#a-hot)"/>
+        <!-- right notes -->
+        <text x="272" y="108" class="ts">второй контур</text>
+        <text x="272" y="124" class="tm">(обход ядра)</text>
+        <text x="272" y="205" class="ts">1–2 сжатие</text>
+        <text x="272" y="262" class="ts">2–3 нагрев</text>
+        <text x="272" y="360" class="ts">3–4 расширение</text>
+        <text x="272" y="412" class="tm">форсаж: догрев</text>
+        <text x="272" y="533" class="ts">разгон газа</text>
+        <line x1="272" y1="561" x2="298" y2="561" stroke="var(--shaft)" stroke-width="3.5"/><text x="304" y="565" class="tm">вал НД</text>
+        <line x1="272" y1="581" x2="298" y2="581" stroke="var(--ink)" stroke-width="2"/><text x="304" y="585" class="tm">вал ВД</text>
+      </svg>
+    </div>
+    <ul class="legend">
+      <li><b>ВУ</b><span><strong>Входное устройство.</strong> Подводит воздух, тормозит его до скорости, удобной компрессору, и выравнивает поток. На сверхзвуковых самолётах регулируемое.</span></li>
+      <li><b>КНД</b><span><strong>Компрессор низкого давления.</strong> Первая часть сжатия. В двухконтурном двигателе это ещё и вентилятор: часть воздуха от него уходит во второй контур.</span></li>
+      <li><b>КВД</b><span><strong>Компрессор высокого давления.</strong> Досжимает воздух. Давление на выходе у АЛ-31Ф выше входного примерно в 23–24 раза.</span></li>
+      <li class="h"><b>КС</b><span><strong>Камера сгорания.</strong> Форсунки впрыскивают керосин, он горит в потоке сжатого воздуха. Часть воздуха не горит, а охлаждает стенки и разбавляет газ до терпимой для турбины температуры.</span></li>
+      <li class="h"><b>ТВД</b><span><strong>Турбина высокого давления.</strong> Самая горячая и нагруженная. Крутит КВД через внутренний полый вал.</span></li>
+      <li class="h"><b>ТНД</b><span><strong>Турбина низкого давления.</strong> Крутит КНД через вал, который проходит внутри вала высокого давления.</span></li>
+      <li class="h"><b>ФК</b><span><strong>Форсажная камера.</strong> В газе после турбины ещё много кислорода. Сюда впрыскивают топливо и дожигают, тяга растёт примерно в 1,6 раза, но топливо уходит очень быстро.</span></li>
+      <li class="h"><b>РС</b><span><strong>Реактивное сопло.</strong> Разгоняет газ, создавая тягу. На сверхзвуковых самолётах регулируемое, с сужением и расширением.</span></li>
+    </ul>
+  </div>
+  <div class="say"><b>Запомни про валы</b>В двигателе два ротора. <strong>Ротор низкого давления:</strong> КНД и ТНД на одном валу. <strong>Ротор высокого давления:</strong> КВД и ТВД на втором, полом валу. Они вращаются с разной частотой, потому что каждому компрессору удобны свои обороты.</div>
+  <p class="small">Фото:<a href="https://yandex.ru/images/search?text=АЛ-31Ф двигатель разрез" target="_blank" rel="noopener">АЛ-31Ф</a> · <a href="https://yandex.ru/images/search?text=РД-33 двигатель" target="_blank" rel="noopener">РД-33</a></p>
+</section>
+
+<!-- ============ ПУНКТ 2: ПРИНЦИП ГТД ============ -->
+<section id="cycle">
+  <div class="head"><h2>Как работает ГТД</h2></div>
+  <div class="say"><b>В трёх предложениях</b>Компрессор сжимает воздух, в камере сгорания в нём сжигают топливо, и газ получается горячим и под давлением. Часть его энергии забирает турбина, чтобы крутить компрессор. Остальной газ расширяется в сопле и вылетает назад с огромной скоростью, а реакция этой струи толкает самолёт вперёд.</div>
+  <div class="fig">
+    <div class="svgbox">
+      <svg viewBox="0 0 300 250" role="img" aria-label="Цикл Брайтона в координатах давление-объём">
+        <path d="M110,170 Q80,150 80,70 L170,70 Q190,140 250,170 Z" class="c-cold" opacity=".7"/>
+        <line x1="40" y1="215" x2="285" y2="215" class="c-line" marker-end="url(#a-ink)"/>
+        <line x1="40" y1="215" x2="40" y2="15" class="c-line" marker-end="url(#a-ink)"/>
+        <path d="M110,170 Q80,150 80,70" fill="none" stroke="var(--cold)" stroke-width="3"/>
+        <line x1="80" y1="70" x2="170" y2="70" stroke="var(--hot)" stroke-width="3"/>
+        <path d="M170,70 Q190,140 250,170" fill="none" stroke="var(--hot)" stroke-width="3"/>
+        <line x1="250" y1="170" x2="110" y2="170" stroke="var(--cold)" stroke-width="3"/>
+        <text x="96" y="186" class="ts">1</text><text x="62" y="68" class="ts">2</text><text x="170" y="60" class="ts">3</text><text x="254" y="164" class="ts">4</text>
+        <text x="270" y="232" class="tm" text-anchor="end">объём v</text>
+        <text x="48" y="22" class="tm">давление p</text>
+        <text x="150" y="240" class="tm" text-anchor="middle">цикл Брайтона</text>
+      </svg>
+    </div>
+    <ul class="legend">
+      <li><b>1–2</b><span><strong>Сжатие.</strong> КНД и КВД. Давление и температура воздуха растут, на это тратится работа турбины.</span></li>
+      <li class="h"><b>2–3</b><span><strong>Подвод тепла.</strong> Горение в КС. Давление почти не меняется, температура сильно растёт.</span></li>
+      <li class="h"><b>3–4</b><span><strong>Расширение.</strong> Сначала в турбине, она забирает энергию на привод компрессора. Остаток расширяется в сопле и превращается в скорость струи.</span></li>
+      <li><b>4–1</b><span><strong>Охлаждение.</strong> Газ уходит в атмосферу и остывает там. Цикл замыкается через окружающий воздух.</span></li>
+    </ul>
+  </div>
+  <div class="card"><h3>Откуда берётся тяга</h3>
+    <p style="margin-top:8px">Упрощённо: <span class="mono">P ≈ G · (Wc − V)</span>, где <span class="mono">G</span> расход воздуха, <span class="mono">Wc</span> скорость струи на выходе, <span class="mono">V</span> скорость полёта. Чтобы тяга выросла, нужно пропустить больше воздуха или разогнать его сильнее. Первый путь выбрали двухконтурные двигатели, второй работает у форсажных. Единицы: кгс, кН или тс, при этом 1 кгс ≈ 9,81 Н.</p>
+  </div>
+  <h3>Примеры: АЛ-31Ф и РД-33</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Параметр</th><th>АЛ-31Ф</th><th>РД-33</th></tr></thead>
+    <tbody>
+      <tr><td>Тип</td><td>двухвальный ТРДДФ</td><td>двухвальный ТРДДФ</td></tr>
+      <tr><td>Самолёт</td><td>Су-27 и семейство</td><td>МиГ-29 и семейство</td></tr>
+      <tr><td>Разработчик</td><td>КБ Люльки, сейчас ОДК-Сатурн (Рыбинск)</td><td>«Климов» (Санкт-Петербург)</td></tr>
+      <tr><td>Тяга без форсажа</td><td class="num">около 7 600 кгс</td><td class="num">около 5 000 кгс</td></tr>
+      <tr><td>Тяга на форсаже</td><td class="num">около 12 500 кгс</td><td class="num">около 8 300 кгс</td></tr>
+      <tr><td>Ступеней КНД / КВД</td><td class="num">4 / 9</td><td class="num">4 / 9</td></tr>
+      <tr><td>Ступеней ТВД / ТНД</td><td class="num">1 / 1</td><td class="num">1 / 1</td></tr>
+      <tr><td>Масса</td><td class="num">около 1 500 кг</td><td class="num">около 1 050 кг</td></tr>
+      <tr><td>Тяга к массе</td><td class="num">около 8 кгс на кг</td><td class="num">около 8 кгс на кг</td></tr>
+    </tbody></table></div>
+  <p class="small muted">Расшифровка: ТРДДФ значит турбореактивный двухконтурный двигатель с форсажем. Данные округлены, точные значения смотрите в справочниках ОДК. Приятный факт: на форсаже тяга примерно в 1,6 раза выше, чем без него, и в 8 раз больше веса самого двигателя.</p>
+  <h3>Двухконтурность в одной фразе</h3>
+  <div class="say">Часть воздуха идёт мимо камеры сгорания и тоже создаёт тягу. Степень двухконтурности m показывает, во сколько раз во втором контуре воздуха больше, чем в первом. У АЛ-31Ф и РД-33 она около 0,5. У гражданских двигателей m выше, и они экономичнее и тише.</div>
+</section>
+
+<!-- ============ ПУНКТ 3: ЖРД ============ -->
+<section id="zhrd">
+  <div class="head"><h2>Как работает ЖРД</h2></div>
+  <div class="say"><b>В трёх предложениях</b>Горючее и окислитель лежат в баках, насосы подают их в камеру сгорания, там они горят при очень высоком давлении. Раскалённый газ вылетает через сопло Лаваля, сначала сужающееся, потом расширяющееся, и разгоняется до сверхзвука. Реакция струи толкает ракету, и воздух для этого не нужен.</div>
+  <div class="fig">
+    <div class="svgbox">
+      <svg viewBox="0 0 380 470" role="img" aria-label="Упрощённая схема жидкостного ракетного двигателя: баки горючего и окислителя, турбонасосный агрегат, камера сгорания, сопло с критическим сечением">
+        <rect x="15" y="12" width="150" height="52" rx="10" class="c-hot"/><text x="90" y="44" class="tl">бак горючего</text>
+        <rect x="215" y="12" width="150" height="52" rx="10" class="c-cold"/><text x="290" y="44" class="tl">бак окислителя</text>
+        <path d="M90,64 V108" class="c-line" stroke="var(--hot)" stroke-width="3" marker-end="url(#a-hot)"/>
+        <path d="M290,64 V108" class="c-line" stroke="var(--cold)" stroke-width="3" marker-end="url(#a-cold)"/>
+        <rect x="60" y="112" width="260" height="56" rx="6" fill="var(--surface)" stroke="var(--ink-2)" stroke-width="1.6"/>
+        <text x="190" y="136" class="tl">ТНА</text><text x="190" y="156" class="tm" text-anchor="middle">насосы + турбина</text>
+        <path d="M60,140 H18" class="c-line" stroke="var(--ink-2)" stroke-dasharray="4 3" marker-end="url(#a-ink)"/>
+        <text x="14" y="130" class="tm">выхлоп*</text>
+        <path d="M145,168 V222" class="c-line" stroke="var(--hot)" stroke-width="3" marker-end="url(#a-hot)"/>
+        <path d="M175,168 V222" class="c-line" stroke="var(--cold)" stroke-width="3" marker-end="url(#a-cold)"/>
+        <rect x="100" y="226" width="120" height="64" rx="4" class="c-hot"/>
+        <rect x="100" y="226" width="120" height="10" fill="var(--ink-2)" opacity=".55"/>
+        <polygon points="100,290 140,320 80,400 240,400 180,320 220,290" class="c-hot" stroke-dasharray="6 3"/>
+        <text x="160" y="268" class="tl">камера</text>
+        <path d="M110,410 V450 M160,410 V456 M210,410 V450" class="c-line" stroke="var(--hot)" stroke-width="4" marker-end="url(#a-hot)"/>
+        <text x="232" y="250" class="ts">камера сгорания</text>
+        <text x="232" y="266" class="tm">около 3000–3500 К</text>
+        <text x="192" y="322" class="ts">горло сопла</text>
+        <text x="192" y="338" class="tm">скорость = звуку</text>
+        <text x="250" y="392" class="ts">срез: сверхзвук</text>
+        <text x="8" y="330" class="tm">стенки</text><text x="8" y="345" class="tm">охлаждает</text><text x="8" y="360" class="tm">горючее</text>
+      </svg>
+    </div>
+    <ul class="legend">
+      <li><b>Баки</b><span>Горючее (керосин, водород, метан) и окислитель (чаще жидкий кислород). Ракета возит окислитель с собой, поэтому может работать в космосе.</span></li>
+      <li><b>ТНА</b><span><strong>Турбонасосный агрегат.</strong> Насосы подают компоненты в камеру под давлением в сотни атмосфер. Турбину крутит газ из газогенератора, в котором сжигается небольшая часть топлива.</span></li>
+      <li class="h"><b>Камера</b><span>Форсунки распыляют компоненты, они горят. Газ горячее, чем температура плавления стали, поэтому стенки охлаждают горючим: оно течёт по каналам в стенке перед впрыском. Это называется регенеративным охлаждением.</span></li>
+      <li class="h"><b>Сопло</b><span><strong>Сопло Лаваля.</strong> В самом узком месте (критическое сечение) скорость газа равна скорости звука, дальше сопло расширяется и газ разгоняется до сверхзвука.</span></li>
+      <li><b>*Схемы</b><span><strong>Открытая:</strong> отработанный газ турбины выбрасывают, это проще. <strong>Закрытая:</strong> его дожигают в камере, потерь меньше, но конструкция сложнее.</span></li>
+    </ul>
+  </div>
+  <h3>ГТД и ЖРД рядом</h3>
+  <div class="scroll"><table>
+    <thead><tr><th></th><th>ГТД</th><th>ЖРД</th></tr></thead>
+    <tbody>
+      <tr><td>Окислитель</td><td>воздух из атмосферы</td><td>свой, из бака</td></tr>
+      <tr><td>Где работает</td><td>в атмосфере</td><td>везде, в том числе в космосе</td></tr>
+      <tr><td>Расход топлива на единицу тяги</td><td>небольшой</td><td>в разы выше</td></tr>
+      <tr><td>Тяга при разгоне</td><td>падает с высотой</td><td>почти не зависит от скорости</td></tr>
+      <tr><td>Где стоит</td><td>самолёты, вертолёты, электростанции</td><td>ракеты-носители, разгонные блоки</td></tr>
+      <tr><td>Примеры</td><td>АЛ-31Ф, РД-33, ПС-90А</td><td>РД-107/108, РД-171, РД-180, РД-191</td></tr>
+    </tbody></table></div>
+  <div class="grid2">
+    <div class="card"><h3>Российские ЖРД</h3>
+      <ul class="tight small" style="margin-top:10px">
+        <li><b>РД-107/108</b> на ракетах «Союз»</li>
+        <li><b>РД-170/171</b> на «Энергии», «Зените», будущем «Союзе-5»</li>
+        <li><b>РД-180</b> на американской «Атлас-5»</li>
+        <li><b>РД-191</b> на «Ангаре»</li>
+        <li>Разработчик всех этих двигателей: НПО Энергомаш им. Глушко</li>
+      </ul>
+    </div>
+    <div class="card"><h3>А твёрдотопливные?</h3>
+      <p class="small" style="margin-top:8px">В РДТТ топливо и окислитель смешаны в твёрдый заряд внутри корпуса. Он горит по поверхности, подача насосами не нужна. Проще и надёжнее, но тягой управлять трудно. Их проектирует та же кафедра 202, где два профиля: ЖРД и РДТТ.</p>
+    </div>
+  </div>
+  <p class="small">Фото: <a href="https://yandex.ru/images/search?text=РД-180 двигатель" target="_blank" rel="noopener">РД-180</a> · <a href="https://yandex.ru/images/search?text=РД-171МВ двигатель" target="_blank" rel="noopener">РД-171МВ</a> · <a href="https://yandex.ru/images/search?text=РД-107 двигатель Союз" target="_blank" rel="noopener">РД-107</a></p>
+</section>
+
+<!-- ============ ПУНКТ 4: ПОКОЛЕНИЯ ============ -->
+<section id="gen">
+  <div class="head"><h2>5 поколений и дальше</h2></div>
+  <p class="muted small" style="margin:0">Деление условное, в разных источниках границы и годы немного отличаются. Как опора это нормально, главное объяснить, что менялось.</p>
+  <div class="gens">
+    <div class="gen"><div class="n">1<small>1940–50-е</small></div><div><h3>Простые турбореактивные</h3><p class="small" style="margin:6px 0 0">Дозвуковые ТРД, без форсажа. Степень сжатия около 3–6. <b>ВК-1</b> и <b>РД-45</b> на МиГ-15, <b>АМ-3</b> на Ту-16 и Ту-104.</p></div></div>
+    <div class="gen"><div class="n">2<small>1950–60-е</small></div><div><h3>Сверхзвук и форсаж</h3><p class="small" style="margin:6px 0 0">Форсажные камеры, регулируемые воздухозаборники и сопла. Степень сжатия около 7–11. <b>Р-11Ф-300</b> на МиГ-21, <b>АЛ-7Ф</b> на Су-7.</p></div></div>
+    <div class="gen"><div class="n">3<small>1960–70-е</small></div><div><h3>Двухконтурные</h3><p class="small" style="margin:6px 0 0">Появляется второй контур, двигатель становится экономичнее. Степень сжатия около 12–20. <b>Д-30КУ</b> на Ил-62М, <b>НК-8</b> на Ту-154, <b>АЛ-21Ф-3</b> на Су-24.</p></div></div>
+    <div class="gen"><div class="n">4<small>1970–80-е, летает до сих пор</small></div><div><h3>Охлаждаемые турбины и цифровое управление</h3><p class="small" style="margin:6px 0 0">Монокристаллические лопатки, сложное охлаждение, электронные системы управления. Степень сжатия около 20–30. <b>АЛ-31Ф</b> (Су-27), <b>РД-33</b> (МиГ-29), <b>ПС-90А</b> (Ил-96, Ту-204), <b>НК-32</b> (Ту-160). Версия <b>АЛ-31ФП</b> получила управляемый вектор тяги.</p></div></div>
+    <div class="gen"><div class="n">5<small>2000-е и позже</small></div><div><h3>Сверхзвук без форсажа</h3><p class="small" style="margin:6px 0 0">Крейсерский сверхзвук без форсажа, тяга около 10 кгс на кг массы, полностью цифровое управление, вектор тяги, малая заметность. Степень сжатия 30 и выше. <b>«Изделие 30»</b> для Су-57. <b>«Изделие 117С»</b> на Су-35С считается переходным. За рубежом F119 (F-22), F135 (F-35).</p></div></div>
+    <div class="gen next"><div class="n">6<small>разрабатывается</small></div><div><h3>Адаптивный цикл и третий контур</h3><p class="small" style="margin:6px 0 0">Двигатель меняет степень двухконтурности прямо в полёте. Керамические композиты, аддитивное производство, цифровой двойник. В США известны программа NGAP и двигатели XA100, XA101. В России работы ведёт ОДК, подробности закрыты.</p></div></div>
+  </div>
+  <h3>Как росла температура газа перед турбиной</h3>
+  <div class="bars" role="img" aria-label="Температура газа перед турбиной по поколениям, ориентировочно">
+    <div class="bar"><span>1 покол.</span><i style="--w:55%"></i><span>≈1100 К</span></div>
+    <div class="bar"><span>2 покол.</span><i style="--w:62%"></i><span>≈1250 К</span></div>
+    <div class="bar"><span>3 покол.</span><i style="--w:70%"></i><span>≈1400 К</span></div>
+    <div class="bar"><span>4 покол.</span><i style="--w:82%"></i><span>≈1650 К</span></div>
+    <div class="bar"><span>5 покол.</span><i style="--w:92%"></i><span>≈1850 К</span></div>
+  </div>
+  <p class="small muted">Ориентиры для понимания тенденции. Чем горячее газ, тем больше тяга и экономичнее двигатель, поэтому инженеры борются за каждый градус через материалы и охлаждение.</p>
+
+  <h3>Про 7 поколение и «контролируемые взрывы»</h3>
+  <div class="warn"><b>Про термин</b>Официального 7-го поколения нет, шестое тоже ещё в разработке. Семёркой часто называют следующий шаг после адаптивных двигателей: это двигатели на детонационном горении. Стандарта пока нет.</div>
+  <div class="card"><h3>Детонационный двигатель</h3>
+    <p style="margin-top:8px">В обычной камере топливо горит спокойно, фронт пламени движется медленнее звука, давление почти постоянно. В детонационной камере горение идёт ударной волной со сверхзвуковой скоростью. Смесь сжимается самой волной, поэтому цикл теоретически выгоднее цикла Брайтона. Это идея цикла Зельдовича, 1940-е.</p>
+    <ul class="tight small">
+      <li><b>Импульсный (ПДД):</b> серия отдельных «взрывов» в трубе, как пулемёт.</li>
+      <li><b>Вращающийся (РДД):</b> детонационная волна бежит по кольцевой камере без остановки, горение почти непрерывное.</li>
+      <li><b>Трудности:</b> вибрации, перегрев стенок, подача смеси, ресурс. Из-за этого двигатели пока лабораторные.</li>
+      <li><b>Что известно:</b> стендовые испытания детонационных ракетных двигателей в России (НПО Энергомаш), в США (NASA) и Японии.</li>
+    </ul>
+  </div>
+  <div class="card"><h3>Трёхконтурный двигатель (интересный факт)</h3>
+    <p style="margin-top:8px">К двум обычным потокам добавляют третий, дополнительный поток воздуха, который можно включать и перекрывать. На крейсерском режиме нужна экономичность, и третий поток увеличивает двухконтурность. В бою нужна тяга и малая заметность, и поток закрывают. Заодно третий поток охлаждает горячие части и снижает инфракрасную заметность. Так устроены двигатели адаптивного цикла.</p>
+  </div>
+</section>
+
+<!-- ============ ПУНКТ 5: КАФЕДРЫ ============ -->
+<section id="dept">
+  <div class="head"><h2>Кафедры Института №2</h2></div>
+  <p class="muted small" style="margin:0">Основная специальность 24.05.02 «Проектирование авиационных и ракетных двигателей», профили разделены по кафедрам. Отдельно стоит 204 с направлением 13.03.01.</p>
+  <div class="grid2">
+    <div class="card dept"><div class="no">201</div><h3>Теория воздушно-реактивных двигателей</h3><div class="code">24.05.02 · проектирование авиационных двигателей</div>
+      <p style="margin:0">Готовит инженеров-расчётчиков и проектировщиков газотурбинных двигателей разного применения.</p>
+      <div class="who"><b>Кому:</b> тем, кто хочет понимать, как работает самолётный двигатель, и считать его.</div></div>
+    <div class="card dept"><div class="no">202</div><h3>Ракетные двигатели</h3><div class="code">24.05.02 · два профиля: ЖРД и РДТТ</div>
+      <p style="margin:0">Расчёт и конструирование ракетных двигателей и их агрегатов для земных условий и для космических ракет.</p>
+      <div class="who"><b>Кому:</b> тем, кто мечтает о ракетах.</div></div>
+    <div class="card dept"><div class="no">203</div><h3>Конструкция и прочность</h3><div class="code">24.05.02 · конструкция и прочность авиационных и ракетных двигателей, силовых и энергетических установок</div>
+      <p style="margin:0">Инженер-конструктор: динамика, прочность, согласование двигателя, вспомогательные системы для устойчивой работы силовой установки.</p>
+      <div class="who"><b>Кому:</b> тем, кто любит чертить и считать, не развалится ли деталь.</div></div>
+    <div class="card dept"><div class="no">204</div><h3>Тепловые процессы в авиационной и ракетно-космической технике</h3><div class="code">13.03.01 · теплоэнергетика и теплотехника</div>
+      <p style="margin:0">3D-расчёты теплофизических и гидрогазодинамических процессов, разработка энергосистем. Сильная физико-математическая подготовка, поэтому востребованы в любой области.</p>
+      <div class="who"><b>Кому:</b> любителям физики и математики, которым интересно моделирование.</div></div>
+    <div class="card dept"><div class="no">205</div><h3>Технология производства двигателей ЛА</h3><div class="code">24.05.02 · проектирование технологических процессов производства</div>
+      <p style="margin:0">Инженеры-технологи: выбирают технологию, материалы и оборудование для производства авиационных, ракетных двигателей и энергоустановок.</p>
+      <div class="who"><b>Кому:</b> тем, кто хочет, чтобы задуманное можно было сделать.</div></div>
+    <div class="card dept"><div class="no">205 + АТ</div><h3>Ремонт и производство с Аэрофлот Техникс</h3><div class="code">с 2025 года · сетевая программа</div>
+      <p style="margin:0">Подготовка специалистов по обслуживанию и ремонту двигателей воздушных судов. Практики в организациях Аэрофлота, стандарты эксплуатации, диагностика и ремонт по российским и международным нормам.</p>
+      <div class="who"><b>Кому:</b> тем, кому интереснее работа с реальными самолётами.</div></div>
+    <div class="card dept"><div class="no">207</div><h3>Метрология, стандартизация и сертификация</h3><div class="code">сетевая программа «МАИ-ОДК» · испытания и сертификация двигателей</div>
+      <p style="margin:0">Создание и оснащение испытательных стендов, испытания новых изделий, экспериментальная отработка деталей и узлов на разных этапах жизненного цикла, сертификация.</p>
+      <div class="who"><b>Кому:</b> экспериментаторам, которые любят доказывать на стенде.</div></div>
+    <div class="card dept"><div class="no">208</div><h3>Электроракетные двигатели, энергетические и энергофизические установки</h3><div class="code">24.05.02 · проектирование электроракетных двигателей</div>
+      <p style="margin:0">Расчёт и проектирование электроракетных двигателей и энергоустановок для космических аппаратов, наземная отработка, бортовые электроэнергетические установки.</p>
+      <div class="who"><b>Кому:</b> тем, кто хочет в космос и в электричество.</div></div>
+  </div>
+  <div class="say"><b>Жизнь двигателя одной строкой</b>Посчитали (201, 204) → сконструировали и проверили на прочность (203) → придумали, как сделать (205) → испытали и сертифицировали (207) → эксплуатируют и ремонтируют (205, Аэрофлот Техникс). Ракеты и спутники: 202 и 208.</div>
+</section>
+
+<!-- ============ ПУНКТ 6: РАБОТОДАТЕЛИ ============ -->
+<section id="work">
+  <div class="head"><h2>Работодатели и география</h2></div>
+  <div class="grid2">
+    <div class="card"><h3>ОДК</h3><p class="small" style="margin:8px 0 0">Объединённая двигателестроительная корпорация, входит в Ростех. Объединяет большинство российских производителей двигателей для самолётов и вертолётов, плюс наземные и морские газотурбинные установки. Из этого списка главный работодатель для выпускников 201, 203, 205, 207.</p></div>
+    <div class="card"><h3>Технодинамика</h3><p class="small" style="margin:8px 0 0">Холдинг Ростеха, делает авиационные агрегаты и системы: шасси, гидравлику, топливную автоматику, электроснабжение. Это то, что обслуживает и двигатель, и самолёт.</p></div>
+    <div class="card"><h3>ОАК</h3><p class="small" style="margin:8px 0 0">Объединённая авиастроительная корпорация: Сухой, МиГ, Ильюшин, Туполев, Яковлев. Они строят самолёты и выбирают под них двигатель, то есть это главный заказчик ОДК.</p></div>
+    <div class="card"><h3>Энергомаш</h3><p class="small" style="margin:8px 0 0">НПО Энергомаш им. академика В. П. Глушко, город Химки. Известен мощными ЖРД, входит в Роскосмос. Работодатель для кафедры 202.</p></div>
+    <div class="card"><h3>Аэрофлот Техникс</h3><p class="small" style="margin:8px 0 0">Техническое обслуживание и ремонт воздушных судов, включая двигатели. Партнёр сетевой программы кафедры 205, студенты проходят практику на его площадках.</p></div>
+  </div>
+  <h3>Что делают в ОДК: проекты</h3>
+  <div class="card"><ul class="tight small">
+    <li><b>ПД-14</b> для МС-21, <b>ПД-8</b> для SJ-100, <b>ПД-35</b> перспективный двигатель большой тяги (все Пермь, ОДК-Авиадвигатель)</li>
+    <li><b>ТВ7-117СТ-01</b> для Ил-114-300, <b>ВК-2500</b> для вертолётов (ОДК-Климов)</li>
+    <li><b>«Изделие 30»</b> для Су-57 (ОДК-УМПО, Уфа)</li>
+    <li><b>ГТД-110М</b> для энергетики (ОДК-Сатурн)</li>
+    <li>Что именно сейчас летает или проходит испытания, смотрите в новостях ОДК: статусы быстро меняются.</li>
+  </ul></div>
+  <h3>География двигателестроения</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Город</th><th>Кто там</th><th>Чем известен</th></tr></thead>
+    <tbody>
+      <tr><td>Москва, Химки</td><td>МАИ, ЦИАМ, ОДК-Салют, НПО Энергомаш</td><td>наука, ремонт и серия самолётных двигателей, ракетные ЖРД</td></tr>
+      <tr><td>Санкт-Петербург</td><td>ОДК-Климов</td><td>РД-33, вертолётные двигатели</td></tr>
+      <tr><td>Рыбинск</td><td>ОДК-Сатурн</td><td>АЛ-31Ф, SaM146, газовые турбины</td></tr>
+      <tr><td>Пермь</td><td>ОДК-Авиадвигатель, ОДК-Пермские моторы, ОДК-СТАР</td><td>ПС-90А, ПД-14, ПД-35, газовые турбины</td></tr>
+      <tr><td>Уфа</td><td>ОДК-УМПО</td><td>серийные двигатели для боевых самолётов</td></tr>
+      <tr><td>Самара</td><td>ОДК-Кузнецов</td><td>НК-32 для Ту-160, НК-12 для Ту-95</td></tr>
+      <tr><td>Воронеж</td><td>КБХА</td><td>ракетные двигатели, РД-0124</td></tr>
+      <tr><td>Калининград</td><td>ОКБ «Факел»</td><td>электроракетные двигатели для спутников</td></tr>
+    </tbody></table></div>
+  <p class="small muted">Мнемоника: самолётные двигатели идут от Волги до Урала (Рыбинск, Самара, Уфа, Пермь), ракетные в Химках, электроракетные в Калининграде, а в Москве наука и МАИ.</p>
+</section>
+
+<!-- ============ ТРЕНДЫ ============ -->
+<section id="trend">
+  <div class="head"><h2>Тренды двигателестроения</h2></div>
+  <p class="muted small" style="margin:0">Основные направления развития силовых установок.</p>
+  <div class="grid2">
+    <div class="card"><h3>Гибридные установки</h3><p class="small" style="margin:8px 0 0">Есть и в наземной технике, и в авиации, особенно для беспилотников. Двигатель внутреннего сгорания работает как источник энергии, а для больших мощностей добавляют малоразмерные ГТД.</p></div>
+    <div class="card"><h3>Электрические силовые установки</h3><p class="small" style="margin:8px 0 0">Станут основой малой и средней авиации, особенно авиалиний и аэротакси в городах: почти без выбросов и шума.</p></div>
+    <div class="card"><h3>Биотопливо</h3><p class="small" style="margin:8px 0 0">Рост спроса на экологичность, горючее из органических промышленных отходов, растительного и животного сырья.</p></div>
+    <div class="card"><h3>Многоразовые ракеты</h3><p class="small" style="margin:8px 0 0">Устойчивое освоение космоса невозможно без многоразовости и сверхтяжёлых ракет. Двигатель должен быть мощным и экономичным.</p></div>
+    <div class="card"><h3>Группировки спутников</h3><p class="small" style="margin:8px 0 0">Бесшовная навигация и связь. Спутникам нужны надёжные двигатели, которые годами и десятилетиями держат орбиту. Это ниша электроракетных двигателей, кафедра 208.</p></div>
+    <div class="card"><h3>Цифровизация и роботизация</h3><p class="small" style="margin:8px 0 0">Детали со сложной геометрией в большой серии трудно делать вручную. Роботы на участках и линиях, цифровой контроль на всём цикле от изготовления до эксплуатации. Это территория кафедры 205.</p></div>
+  </div>
+</section>
+
+<!-- ============ ВОПРОСЫ ============ -->
+<section id="qa">
+  <div class="head"><h2>Вопросы абитуриентов</h2></div>
+  <p class="muted small" style="margin:0">Нажмите на вопрос, чтобы увидеть короткий ответ.</p>
+  <div>
+    <details class="qa"><summary>Чем ГТД отличается от ЖРД?</summary><div class="ans"><p>ГТД берёт кислород из воздуха, поэтому работает только в атмосфере и расходует мало топлива. ЖРД возит окислитель с собой, работает и в космосе, но топлива сжигает намного больше. Самолёту нужен первый, ракете второй.</p></div></details>
+    <details class="qa"><summary>Что такое двухконтурный двигатель и зачем он нужен?</summary><div class="ans"><p>Часть воздуха проходит мимо камеры сгорания и тоже создаёт тягу. Так двигатель экономичнее и тише на тех же скоростях. У истребителей степень двухконтурности небольшая (около 0,5), у пассажирских лайнеров заметно выше.</p></div></details>
+    <details class="qa"><summary>Зачем в двигателе два вала?</summary><div class="ans"><p>Компрессору низкого давления удобны одни обороты, высокого другие. Два независимых ротора позволяют каждому работать в лучшем режиме, и двигатель устойчивее при разных нагрузках.</p></div></details>
+    <details class="qa"><summary>Что такое форсаж и почему он не включён всегда?</summary><div class="ans"><p>После турбины в газе остаётся кислород, и в форсажной камере в него впрыскивают дополнительное топливо. Тяга растёт примерно в 1,6 раза. Расход топлива при этом огромный, топлива хватает ненадолго, поэтому форсаж включают на взлёте и в бою.</p></div></details>
+    <details class="qa"><summary>Почему лопатки турбины не плавятся?</summary><div class="ans"><p>Газ перед турбиной в современных двигателях горячее, чем температура плавления сплава. Выручают три вещи: жаропрочные монокристаллические сплавы, тонкие каналы внутри лопатки, через которые продувается воздух от компрессора, и керамическое покрытие снаружи.</p></div></details>
+    <details class="qa"><summary>Как работает тяга и в чём её измеряют?</summary><div class="ans"><p>Двигатель разгоняет воздух или газ назад, а по закону сохранения импульса получает толчок вперёд. Измеряют в кгс, кН или тоннах силы. Один кгс ≈ 9,81 Н, поэтому 12 500 кгс примерно 123 кН.</p></div></details>
+    <details class="qa"><summary>Кем работают выпускники и чем занимаются?</summary><div class="ans"><p>Расчётчик считает, каким будет двигатель (201, 204). Конструктор рисует и проверяет на прочность (203). Технолог придумывает, как это изготовить (205). Испытатель проверяет на стенде и сертифицирует (207). Специалист по эксплуатации обслуживает и ремонтирует (205 с Аэрофлот Техникс). Ракеты и спутники: 202 и 208.</p></div></details>
+    <details class="qa"><summary>Где можно работать после института?</summary><div class="ans"><p>Предприятия ОДК, Энергомаш, Аэрофлот Техникс, предприятия-партнёры, например Технодинамика и заказчики вроде ОАК. Есть и сетевые программы: «МАИ-ОДК» на кафедре 207 и ремонт с Аэрофлот Техникс на кафедре 205.</p></div></details>
+    <details class="qa"><summary>А если я потом не захочу в двигатели?</summary><div class="ans"><p>Выпускники востребованы в инженерии в целом: фундаментальная подготовка и проектный опыт ценятся везде. А кафедра 204 вообще даёт базу по физике и математике для любой области. К тому же можно пройти переподготовку и повышение квалификации и во время учёбы, и после неё.</p></div></details>
+    <details class="qa"><summary>Что такое программа с Аэрофлот Техникс?</summary><div class="ans"><p>Сетевая программа кафедры 205, набор с 2025 года, «Проектирование технологических процессов ремонта и производства авиационных двигателей». Студенты проходят практику в организациях Аэрофлота, изучают стандарты эксплуатации, методы диагностики и ремонта двигателей по российским и международным нормам.</p></div></details>
+    <details class="qa"><summary>Чем занимается кафедра 207?</summary><div class="ans"><p>Испытаниями и сертификацией: стендами, проверкой новых изделий, экспериментальной отработкой деталей и узлов на разных этапах жизненного цикла. Программа сетевая, «МАИ-ОДК».</p></div></details>
+    <details class="qa"><summary>Что такое электроракетный двигатель?</summary><div class="ans"><p>Газ (часто ксенон) разгоняют электрическим или магнитным полем, а не горением. Тяга крошечная, доли ньютона, зато двигатель экономичен и может работать месяцами и годами. Идеален для коррекции орбиты спутников. Этим занимается кафедра 208. Широко известны стационарные плазменные двигатели.</p></div></details>
+    <details class="qa"><summary>Что такое детонационный двигатель?</summary><div class="ans"><p>Это двигатель, где топливо горит ударной волной, а не спокойным пламенем. Волна сама сжимает смесь, цикл теоретически выгоднее обычного. Сложно с вибрациями, перегревом и ресурсом, поэтому пока экспериментальные образцы.</p></div></details>
+    <details class="qa"><summary>Что такое двигатель пятого и шестого поколения?</summary><div class="ans"><p>Пятое: сверхзвук без форсажа, тяга около 10 кгс на кг массы, малая заметность, вектор тяги, цифровое управление («Изделие 30» на Су-57). Шестое пока разрабатывают: двигатель адаптивного цикла, который в полёте меняет двухконтурность, с третьим контуром.</p></div></details>
+    <details class="qa"><summary>Можно ли будет летать на электричестве?</summary><div class="ans"><p>Малая и средняя авиация, включая аэротакси, да. Крупные самолёты пока нет, мешает вес аккумуляторов. Поэтому развиваются гибриды: двигатель внутреннего сгорания и малоразмерный ГТД вырабатывают энергию, а летит электромотор.</p></div></details>
+    <details class="qa"><summary>Что такое биотопливо и зачем оно?</summary><div class="ans"><p>Это горючее из органических промышленных отходов, растительного или животного сырья. Оно позволяет снизить вклад авиации в выбросы, и поэтому спрос на него растёт.</p></div></details>
+    <details class="qa"><summary>Зачем нужны многоразовые ракеты?</summary><div class="ans"><p>Чтобы вывод груза на орбиту стал дешевле. Для этого нужны мощные и в то же время экономичные двигатели, способные выдерживать несколько запусков. Без многоразовости не получится устойчиво осваивать космос и летать к другим небесным телам.</p></div></details>
+    <details class="qa"><summary>Какие предметы нужны для поступления и учёбы?</summary><div class="ans"><p>В двигателях главное физика и математика. Конкретные экзамены и проходные баллы лучше уточнить на сайте МАИ и в приёмной комиссии.</p></div></details>
+    <details class="qa"><summary>Что такое цифровизация и роботизация производства?</summary><div class="ans"><p>Роботы берут на себя участки и целые линии, а цифровая система сопровождает деталь от изготовления до эксплуатации и следит за качеством. Это нужно, потому что изделия сложной формы в большой серии одними руками делать трудно и долго.</p></div></details>
+  </div>
+</section>
+
+<!-- ============ ТРЕНАЖЁР ============ -->
+<section id="drill">
+  <div class="head"><h2>Проверь себя</h2></div>
+  <div class="card drill">
+    <div class="small muted mono" id="dcount">&nbsp;</div>
+    <div class="q" id="dq" aria-live="polite">Загрузка вопроса…</div>
+    <div class="a" id="da" hidden></div>
+    <div class="btns">
+      <button type="button" id="dshow">Показать ответ</button>
+      <button type="button" class="ghost" id="dnext">Следующий вопрос</button>
+    </div>
+  </div>
+  <p class="small muted" style="margin:0">Сначала ответьте про себя, потом откройте ответ. Вопросы выпадают в случайном порядке.</p>
+</section>
+
+<footer>Собрано по материалам института и общим знаниям о двигателях. Числа округлены. Подробности уточняйте на сайте МАИ и у кафедр.</footer>
+</div>
+
+<script>
+(function(){
+  var items=[].slice.call(document.querySelectorAll('details.qa'));
+  var q=document.getElementById('dq'),a=document.getElementById('da'),show=document.getElementById('dshow'),nxt=document.getElementById('dnext'),cnt=document.getElementById('dcount');
+  var deck=[],i=-1;
+  function shuffle(){
+    deck=items.map(function(_,k){return k});
+    for(var k=deck.length-1;k>0;k--){var j=Math.floor(Math.random()*(k+1));var t=deck[k];deck[k]=deck[j];deck[j]=t}
+    i=-1;
+  }
+  function next(){
+    if(i+1>=deck.length) shuffle();
+    i++;
+    var el=items[deck[i]];
+    q.textContent=el.querySelector('summary').textContent;
+    a.innerHTML=el.querySelector('.ans').innerHTML;
+    a.hidden=true;
+    show.textContent='Показать ответ';
+    cnt.textContent='Вопрос '+(i+1)+' из '+deck.length;
+  }
+  show.addEventListener('click',function(){
+    a.hidden=!a.hidden;
+    show.textContent=a.hidden?'Показать ответ':'Скрыть ответ';
+  });
+  nxt.addEventListener('click',next);
+  shuffle();next();
+})();
+</script>
+
+</body>
+</html>
